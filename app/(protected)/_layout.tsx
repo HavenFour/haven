@@ -3,7 +3,9 @@ import { useAuth } from "@/contexts/auth-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs, useRouter } from "expo-router";
 import { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text, Dimensions, Platform } from "react-native";
+
+const { width: screenWidth } = Dimensions.get('window');
 
 export default function ProtectedLayout() {
   const router = useRouter();
@@ -21,20 +23,27 @@ export default function ProtectedLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: "#8e8e93",
+        tabBarInactiveTintColor: "#6B7280",
         tabBarStyle: {
           position: "absolute",
-          left: 20,
-          right: 20,
-          backgroundColor: "#fff",
-          borderTopRightRadius: 20,
-          borderTopLeftRadius: 20,
-          paddingTop: 10,
-          height: 70,
-          justifyContent: "center",
-          alignItems: "center",
-          // borderColor:'yellow',
-          // borderWidth: 4
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "#FFFFFF",
+          borderTopWidth: 1,
+          borderTopColor: "#E5E7EB",
+          paddingTop: 12,
+          paddingBottom: Platform.OS === 'ios' ? 30 : 20,
+          paddingHorizontal: 8,
+          height: Platform.OS === 'ios' ? 90 : 80,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: -2,
+          },
+          shadowOpacity: 0.1,
+          shadowRadius: 8,
+          elevation: 10,
         },
       }}
     >
@@ -42,45 +51,56 @@ export default function ProtectedLayout() {
         name="home"
         options={{
           tabBarIcon: ({ color, size, focused }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons 
-                name={focused ? "home" : "home-outline"} 
-                size={size} 
-                color={color} 
-              />
+            <View style={styles.tabWrapper}>
+              <View style={styles.tabItem}>
+                <Ionicons 
+                  name={focused ? "home" : "home-outline"} 
+                  size={24} 
+                  color={focused ? COLORS.primary : color} 
+                />
+                {focused && (
+                  <Text style={styles.activeTabLabel}>Home</Text>
+                )}
+              </View>
             </View>
           ),
         }}
       />
+      
       <Tabs.Screen
         name="notes"
         options={{
           tabBarIcon: ({ color, size, focused }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons 
-                name={focused ? "create" : "create-outline"} 
-                size={size} 
-                color={color} 
-              />
+            <View style={styles.tabWrapper}>
+              <View style={styles.tabItem}>
+                <Ionicons 
+                  name={focused ? "create" : "create-outline"} 
+                  size={24} 
+                  color={focused ? COLORS.primary : color} 
+                />
+                {focused && (
+                  <Text style={styles.activeTabLabel}>Notes</Text>
+                )}
+              </View>
             </View>
           ),
         }}
       />
 
-      {/* Center Button with White Background and Primary Icon */}
       <Tabs.Screen
         name="location"
         options={{
-          tabBarIcon: ({ focused }) => (
-            <View style={styles.centerButtonContainer}>
-              <View style={styles.whiteBackground}>
-                <View style={styles.centerButton}>
-                  <Ionicons 
-                    name={focused ? "map" : "map-outline"} 
-                    size={30} 
-                    color="#fff" 
-                  />
-                </View>
+          tabBarIcon: ({ color, size, focused }) => (
+            <View style={styles.tabWrapper}>
+              <View style={styles.tabItem}>
+                <Ionicons 
+                  name={focused ? "map" : "map-outline"} 
+                  size={24} 
+                  color={focused ? COLORS.primary : color} 
+                />
+                {focused && (
+                  <Text style={styles.activeTabLabel}>Location</Text>
+                )}
               </View>
             </View>
           ),
@@ -91,26 +111,37 @@ export default function ProtectedLayout() {
         name="chat"
         options={{
           tabBarIcon: ({ color, size, focused }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons 
-                name={focused ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"} 
-                size={size} 
-                color={color} 
-              />
+            <View style={styles.tabWrapper}>
+              <View style={styles.tabItem}>
+                <Ionicons 
+                  name={focused ? "chatbubble-ellipses" : "chatbubble-ellipses-outline"} 
+                  size={24} 
+                  color={focused ? COLORS.primary : color} 
+                />
+                {focused && (
+                  <Text style={styles.activeTabLabel}>Chat</Text>
+                )}
+              </View>
             </View>
           ),
         }}
       />
+      
       <Tabs.Screen
         name="profile"
         options={{
           tabBarIcon: ({ color, size, focused }) => (
-            <View style={styles.iconContainer}>
-              <Ionicons 
-                name={focused ? "person" : "person-outline"} 
-                size={size} 
-                color={color} 
-              />
+            <View style={styles.tabWrapper}>
+              <View style={styles.tabItem}>
+                <Ionicons 
+                  name={focused ? "person" : "person-outline"} 
+                  size={24} 
+                  color={focused ? COLORS.primary : color} 
+                />
+                {focused && (
+                  <Text style={styles.activeTabLabel}>Profile</Text>
+                )}
+              </View>
             </View>
           ),
         }}
@@ -120,56 +151,30 @@ export default function ProtectedLayout() {
 }
 
 const styles = StyleSheet.create({
-  iconContainer: {
-    justifyContent: "center",
-    alignItems: "center",
+  tabWrapper: {
     flex: 1,
-  },
-  centerButtonContainer: {
-    top: -30,
     justifyContent: "center",
     alignItems: "center",
+    minHeight: 48,
+    width: screenWidth / 5,
   },
-  whiteBackground: {
+  tabItem: {
+    flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    minHeight: 40,
+    minWidth: 50,
+    maxWidth: screenWidth / 5 - 8,
   },
-  centerButton: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: COLORS.primary,
-    shadowColor: COLORS.primary,
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  shadow: {
-    shadowColor: "#7F5DF0",
-    shadowOffset: {
-      width: 0,
-      height: 10,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.5,
-    elevation: 5,
+  activeTabLabel: {
+    color: COLORS.primary,
+    fontSize: 10,
+    fontWeight: "600",
+    fontFamily: "roboto-medium",
+    marginTop: 4,
+    letterSpacing: 0.2,
+    textAlign: "center",
   },
 });

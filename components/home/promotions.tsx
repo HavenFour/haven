@@ -1,3 +1,4 @@
+import { COLORS } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {
@@ -11,67 +12,112 @@ import {
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.75;
+const CARD_WIDTH = width * 0.8;
 
-// Sample promotion data (replace with your actual data)
+// Updated promotion data with better structure
 const promotionData = [
   {
     id: '1',
     title: 'Summer Beach Paradise',
     discount: '50% OFF',
-    description: 'Tropical beaches await you',
+    originalPrice: '$299',
+    salePrice: '$149',
+    description: 'Tropical beaches await you with crystal clear waters',
     image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=250&fit=crop',
     location: 'Bali, Indonesia',
+    rating: 4.8,
+    reviews: 2341,
+    tag: 'Popular',
   },
   {
     id: '2',
     title: 'Mountain Adventure',
     discount: '30% OFF',
-    description: 'Explore breathtaking peaks',
+    originalPrice: '$450',
+    salePrice: '$315',
+    description: 'Explore breathtaking peaks and scenic valleys',
     image: 'https://images.unsplash.com/photo-1464822759844-d150baec028b?w=400&h=250&fit=crop',
     location: 'Swiss Alps',
+    rating: 4.9,
+    reviews: 1876,
+    tag: 'Adventure',
   },
   {
     id: '3',
     title: 'City Break Special',
     discount: '25% OFF',
-    description: 'Urban exploration deals',
+    originalPrice: '$380',
+    salePrice: '$285',
+    description: 'Urban exploration with cultural experiences',
     image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&h=250&fit=crop',
     location: 'Paris, France',
+    rating: 4.7,
+    reviews: 3021,
+    tag: 'Cultural',
   },
   {
     id: '4',
     title: 'Desert Safari',
     discount: '40% OFF',
-    description: 'Experience golden dunes',
+    originalPrice: '$220',
+    salePrice: '$132',
+    description: 'Experience golden dunes and starlit nights',
     image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=400&h=250&fit=crop',
     location: 'Dubai, UAE',
+    rating: 4.6,
+    reviews: 1543,
+    tag: 'Unique',
   },
 ];
 
 const PromotionCard = ({ item, onPress }) => (
   <TouchableOpacity style={styles.card} onPress={() => onPress(item)}>
-    <Image source={{ uri: item.image }} style={styles.cardImage} />
-    <View style={styles.overlay} />
-    
-    {/* Discount Badge */}
-    <View style={styles.discountBadge}>
-      <Text style={styles.discountText}>{item.discount}</Text>
+    <View style={styles.imageContainer}>
+      <Image source={{ uri: item.image }} style={styles.cardImage} />
+      <View style={styles.gradientOverlay} />
+      
+      {/* Tag Badge */}
+      <View style={styles.tagBadge}>
+        <Text style={styles.tagText}>{item.tag}</Text>
+      </View>
+      
+      {/* Discount Badge */}
+      <View style={styles.discountBadge}>
+        <Text style={styles.discountText}>{item.discount}</Text>
+      </View>
     </View>
     
     {/* Card Content */}
     <View style={styles.cardContent}>
-      <View style={styles.locationContainer}>
-        <Ionicons name="location" size={14} color="#fff" />
-        <Text style={styles.locationText}>{item.location}</Text>
+      {/* Location and Rating */}
+      <View style={styles.cardHeader}>
+        <View style={styles.locationContainer}>
+          <Ionicons name="location" size={12} color="#666" />
+          <Text style={styles.locationText}>{item.location}</Text>
+        </View>
+        <View style={styles.ratingContainer}>
+          <Ionicons name="star" size={12} color="#FFB800" />
+          <Text style={styles.ratingText}>{item.rating}</Text>
+          <Text style={styles.reviewsText}>({item.reviews})</Text>
+        </View>
       </View>
       
+      {/* Title */}
       <Text style={styles.cardTitle}>{item.title}</Text>
+      
+      {/* Description */}
       <Text style={styles.cardDescription}>{item.description}</Text>
       
+      {/* Price and CTA */}
       <View style={styles.cardFooter}>
-        <Text style={styles.viewDealsText}>View Deals</Text>
-        <Ionicons name="arrow-forward" size={16} color="#fff" />
+        <View style={styles.priceContainer}>
+          <Text style={styles.originalPrice}>{item.originalPrice}</Text>
+          <Text style={styles.salePrice}>{item.salePrice}</Text>
+        </View>
+        <TouchableOpacity style={styles.ctaButton}>
+          <Text style={styles.ctaText}>Book Now</Text>
+          <Ionicons name="arrow-forward" size={14} color="#fff" />
+        </TouchableOpacity>
       </View>
     </View>
   </TouchableOpacity>
@@ -96,9 +142,10 @@ export default function Promotions() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
-        snapToInterval={CARD_WIDTH + 15} // Card width + margin
+        snapToInterval={CARD_WIDTH + 16}
         decelerationRate="fast"
         snapToAlignment="start"
+        ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
       />
     </View>
   );
@@ -106,88 +153,156 @@ export default function Promotions() {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    // marginVertical: 8,
   },
   listContainer: {
-    paddingRight: 20, // Extra padding at the end
+    // paddingHorizontal: 20,
   },
   card: {
     width: CARD_WIDTH,
-    height: 200,
-    marginRight: 15,
-    borderRadius: 16,
-    overflow: 'hidden',
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 6,
+    borderRadius: 20,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#eee',
+    // All shadow properties removed for clean flat design
+  },
+  imageContainer: {
+    height: 180,
+    position: 'relative',
   },
   cardImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
   },
-  overlay: {
+  gradientOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+  },
+  tagBadge: {
+    position: 'absolute',
+    top: 12,
+    left: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  tagText: {
+    color: '#333',
+    fontSize: 11,
+    fontFamily: 'Roboto-Medium',
+    fontWeight: '600',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   discountBadge: {
     position: 'absolute',
     top: 12,
     right: 12,
-    backgroundColor: '#FF5722',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
+    backgroundColor: '#FF4757',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
   },
   discountText: {
     color: '#fff',
     fontSize: 12,
+    fontFamily: 'Roboto-Bold',
     fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
   cardContent: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
     padding: 16,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    flex: 1,
   },
   locationText: {
-    color: '#fff',
+    color: '#666',
     fontSize: 12,
+    fontFamily: 'Roboto-Regular',
     marginLeft: 4,
-    opacity: 0.9,
+    fontWeight: '400',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  ratingText: {
+    color: '#333',
+    fontSize: 12,
+    fontFamily: 'Roboto-Medium',
+    fontWeight: '600',
+    marginLeft: 2,
+  },
+  reviewsText: {
+    color: '#999',
+    fontSize: 11,
+    fontFamily: 'Roboto-Regular',
+    marginLeft: 2,
   },
   cardTitle: {
-    color: '#fff',
+    color: '#1a1a1a',
     fontSize: 18,
+    fontFamily: 'Roboto-Bold',
     fontWeight: 'bold',
-    marginBottom: 4,
+    lineHeight: 24,
+    marginBottom: 6,
+    letterSpacing: -0.3,
   },
   cardDescription: {
-    color: '#fff',
+    color: '#666',
     fontSize: 14,
-    opacity: 0.9,
-    marginBottom: 12,
+    fontFamily: 'Roboto-Regular',
+    lineHeight: 20,
+    marginBottom: 16,
+    fontWeight: '400',
   },
   cardFooter: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  viewDealsText: {
-    color: '#fff',
+  priceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  originalPrice: {
+    color: '#999',
     fontSize: 14,
+    fontFamily: 'Roboto-Regular',
+    textDecorationLine: 'line-through',
+    marginRight: 8,
+  },
+  salePrice: {
+    color: COLORS.primary,
+    fontSize: 18,
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
+  },
+  ctaButton: {
+    backgroundColor: COLORS.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  ctaText: {
+    color: '#fff',
+    fontSize: 13,
+    fontFamily: 'Roboto-Medium',
     fontWeight: '600',
+    marginRight: 4,
   },
 });
