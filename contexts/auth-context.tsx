@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter, useSegments } from "expo-router";
 import type React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-
+import { useAuth as useClerkAuth, useUser } from "@clerk/clerk-expo";
 interface User {
   id: string;
   email: string;
@@ -14,7 +14,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | undefined;
   signIn: (
     accessToken: string,
     refreshToken: string,
@@ -35,12 +35,43 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const clerkAuth = useClerkAuth();
+  const clerkUserObj = useUser();
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const segments = useSegments();
 
-  const isAuthenticated = !!user;
+  const jwtAuthenticated = !!user;
+  const googleAuthenticated = clerkAuth.isSignedIn;
+
+   useEffect(() => {
+    if (googleAuthenticated && clerkUserObj.isLoaded) {
+      // Map Clerk user info to your User interface
+      const clerkUser = clerkUserObj.user;
+      if (clerkUser) {
+        const mappedUser: User = {
+          id: clerkUser.id,
+          email: clerkUser.emailAddresses[0]?.emailAddress || "",
+          name: clerkUser.firstName || clerkUser.fullName || clerkUser.username || "",
+        };
+        // Update local user state only if different to prevent rerenders
+        setUser((prevUser) => {
+          if (!prevUser || prevUser.id !== mappedUser.id) {
+            return mappedUser;
+          }
+          return prevUser;
+        });
+      }
+    }
+  }, [googleAuthenticated, clerkUserObj.isLoaded, clerkUserObj.user]);
+  
+  // console.log(clerkAuth)
+  // if(googleAuthenticated){
+  //   setUser(clerkAuth.user);
+  // }
+
+  const isAuthenticated = jwtAuthenticated || googleAuthenticated; 
 
   // Check if user is in auth group (login/signup pages)
   const inAuthGroup = segments[0] === "(auth)";
@@ -126,8 +157,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOut = async () => {
     try {
       await AsyncStorage.multiRemove(["accessToken", "refreshToken"]);
-      setUser(null);
-      router.replace("/(auth)/login");
+    setUser(null);
+
+    // Sign out from Clerk if needed
+    if (googleAuthenticated) {
+      await clerkAuth.signOut(); // Wait for Clerk sign-out to finish
+    }
+
+    // When all sign-outs are done, navigate once
+    router.replace("/(auth)/login");
     } catch (error) {
       console.error("Sign out error:", error);
     }

@@ -12,61 +12,54 @@ import {
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
-const CARD_WIDTH = width * 0.8;
+const CARD_WIDTH = width * 0.85;
 
 // Updated promotion data with better structure
 const promotionData = [
   {
     id: '1',
-    title: 'Summer Beach Paradise',
+    title: 'Santorini Sunset Loft',
     discount: '50% OFF',
     originalPrice: '$299',
-    salePrice: '$149',
-    description: 'Tropical beaches await you with crystal clear waters',
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=250&fit=crop',
-    location: 'Bali, Indonesia',
+    salePrice: '$890',
+    description: 'Experience a cliffside loft with iconic white walls, blue domes, and magical sunset views.',
+    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=350&fit=crop',
+    location: 'Santorini, Greece',
     rating: 4.8,
     reviews: 2341,
-    tag: 'Popular',
+    tag: 'Romantic Stay',
+    duration: '2 Night Trip',
+    isLiked: false,
   },
   {
     id: '2',
-    title: 'Mountain Adventure',
+    title: 'Mountain Adventure Lodge',
     discount: '30% OFF',
     originalPrice: '$450',
-    salePrice: '$315',
-    description: 'Explore breathtaking peaks and scenic valleys',
-    image: 'https://images.unsplash.com/photo-1464822759844-d150baec028b?w=400&h=250&fit=crop',
+    salePrice: '$650',
+    description: 'Explore breathtaking peaks and scenic valleys with luxury mountain accommodation.',
+    image: 'https://images.unsplash.com/photo-1464822759844-d150baec028b?w=400&h=350&fit=crop',
     location: 'Swiss Alps',
     rating: 4.9,
     reviews: 1876,
     tag: 'Adventure',
+    duration: '3 Night Trip',
+    isLiked: true,
   },
   {
     id: '3',
-    title: 'City Break Special',
+    title: 'Parisian City Escape',
     discount: '25% OFF',
     originalPrice: '$380',
-    salePrice: '$285',
-    description: 'Urban exploration with cultural experiences',
-    image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&h=250&fit=crop',
+    salePrice: '$480',
+    description: 'Urban exploration with cultural experiences in the heart of the City of Light.',
+    image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&h=350&fit=crop',
     location: 'Paris, France',
     rating: 4.7,
     reviews: 3021,
     tag: 'Cultural',
-  },
-  {
-    id: '4',
-    title: 'Desert Safari',
-    discount: '40% OFF',
-    originalPrice: '$220',
-    salePrice: '$132',
-    description: 'Experience golden dunes and starlit nights',
-    image: 'https://images.unsplash.com/photo-1509316975850-ff9c5deb0cd9?w=400&h=250&fit=crop',
-    location: 'Dubai, UAE',
-    rating: 4.6,
-    reviews: 1543,
-    tag: 'Unique',
+    duration: '4 Night Trip',
+    isLiked: false,
   },
 ];
 
@@ -76,47 +69,41 @@ const PromotionCard = ({ item, onPress }) => (
       <Image source={{ uri: item.image }} style={styles.cardImage} />
       <View style={styles.gradientOverlay} />
       
-      {/* Tag Badge */}
-      <View style={styles.tagBadge}>
-        <Text style={styles.tagText}>{item.tag}</Text>
-      </View>
+      {/* Like Button */}
+      <TouchableOpacity style={styles.likeButton}>
+        <Ionicons 
+          name={item.isLiked ? "heart" : "heart-outline"} 
+          size={20} 
+          color={item.isLiked ? "#FF4757" : "#fff"} 
+        />
+      </TouchableOpacity>
       
-      {/* Discount Badge */}
-      <View style={styles.discountBadge}>
-        <Text style={styles.discountText}>{item.discount}</Text>
-      </View>
-    </View>
-    
-    {/* Card Content */}
-    <View style={styles.cardContent}>
-      {/* Location and Rating */}
-      <View style={styles.cardHeader}>
-        <View style={styles.locationContainer}>
-          <Ionicons name="location" size={12} color="#666" />
-          <Text style={styles.locationText}>{item.location}</Text>
+      {/* Content Overlay */}
+      <View style={styles.overlayContent}>
+        <View style={styles.titleSection}>
+          <Text style={styles.cardTitle}>{item.title}</Text>
+          <Text style={styles.priceText}>{item.salePrice}</Text>
         </View>
-        <View style={styles.ratingContainer}>
-          <Ionicons name="star" size={12} color="#FFB800" />
-          <Text style={styles.ratingText}>{item.rating}</Text>
-          <Text style={styles.reviewsText}>({item.reviews})</Text>
+        
+        <Text style={styles.cardDescription}>{item.description}</Text>
+        
+        {/* Tags Row */}
+        <View style={styles.tagsRow}>
+          <View style={styles.ratingContainer}>
+            <Ionicons name="star" size={14} color="#FFB800" />
+            <Text style={styles.ratingText}>{item.rating}</Text>
+          </View>
+          <View style={styles.tagBadge}>
+            <Text style={styles.tagText}>{item.tag}</Text>
+          </View>
+          <View style={styles.durationBadge}>
+            <Text style={styles.durationText}>{item.duration}</Text>
+          </View>
         </View>
-      </View>
-      
-      {/* Title */}
-      <Text style={styles.cardTitle}>{item.title}</Text>
-      
-      {/* Description */}
-      <Text style={styles.cardDescription}>{item.description}</Text>
-      
-      {/* Price and CTA */}
-      <View style={styles.cardFooter}>
-        <View style={styles.priceContainer}>
-          <Text style={styles.originalPrice}>{item.originalPrice}</Text>
-          <Text style={styles.salePrice}>{item.salePrice}</Text>
-        </View>
-        <TouchableOpacity style={styles.ctaButton}>
-          <Text style={styles.ctaText}>Book Now</Text>
-          <Ionicons name="arrow-forward" size={14} color="#fff" />
+        
+        {/* Book Now Button */}
+        <TouchableOpacity style={styles.bookButton}>
+          <Text style={styles.bookButtonText}>Book now</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -142,10 +129,11 @@ export default function Promotions() {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
-        snapToInterval={CARD_WIDTH + 16}
+        snapToInterval={CARD_WIDTH + 20}
         decelerationRate="fast"
         snapToAlignment="start"
-        ItemSeparatorComponent={() => <View style={{ width: 16 }} />}
+        ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
+       
       />
     </View>
   );
@@ -153,22 +141,20 @@ export default function Promotions() {
 
 const styles = StyleSheet.create({
   container: {
-    // marginVertical: 8,
+    // marginVertical: 16,
   },
   listContainer: {
-    // paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
   card: {
     width: CARD_WIDTH,
-    backgroundColor: '#fff',
-    borderRadius: 20,
+    height: 460,
+    borderRadius: 24,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: '#eee',
-    // All shadow properties removed for clean flat design
+    backgroundColor: '#fff',
   },
   imageContainer: {
-    height: 180,
+    flex: 1,
     position: 'relative',
   },
   cardImage: {
@@ -178,131 +164,117 @@ const styles = StyleSheet.create({
   },
   gradientOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
-  tagBadge: {
+  likeButton: {
     position: 'absolute',
-    top: 12,
-    left: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
+    top: 20,
+    right: 20,
+    width: 36,
+    height: 36,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backdropFilter: 'blur(10px)',
   },
-  tagText: {
-    color: '#333',
-    fontSize: 11,
-    fontFamily: 'Roboto-Medium',
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  discountBadge: {
+  overlayContent: {
     position: 'absolute',
-    top: 12,
-    right: 12,
-    backgroundColor: '#FF4757',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 16,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    padding: 24,
   },
-  discountText: {
-    color: '#fff',
-    fontSize: 12,
-    fontFamily: 'Roboto-Bold',
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
-  },
-  cardContent: {
-    padding: 16,
-  },
-  cardHeader: {
+  titleSection: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: 8,
   },
-  locationContainer: {
+  cardTitle: {
+    color: '#fff',
+    fontSize: 24,
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
+    lineHeight: 28,
+    flex: 1,
+    marginRight: 16,
+    letterSpacing: -0.5,
+  },
+  priceText: {
+    color: '#fff',
+    fontSize: 20,
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
+  },
+  cardDescription: {
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: 15,
+    fontFamily: 'Roboto-Regular',
+    lineHeight: 22,
+    marginBottom: 20,
+    fontWeight: '400',
+  },
+  tagsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
-  },
-  locationText: {
-    color: '#666',
-    fontSize: 12,
-    fontFamily: 'Roboto-Regular',
-    marginLeft: 4,
-    fontWeight: '400',
+    marginBottom: 24,
+    gap: 12,
   },
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    backdropFilter: 'blur(10px)',
   },
   ratingText: {
-    color: '#333',
+    color: '#fff',
+    fontSize: 14,
+    fontFamily: 'Roboto-Medium',
+    fontWeight: '600',
+    marginLeft: 4,
+  },
+  tagBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backdropFilter: 'blur(10px)',
+  },
+  tagText: {
+    color: '#fff',
     fontSize: 12,
     fontFamily: 'Roboto-Medium',
     fontWeight: '600',
-    marginLeft: 2,
   },
-  reviewsText: {
-    color: '#999',
-    fontSize: 11,
-    fontFamily: 'Roboto-Regular',
-    marginLeft: 2,
+  durationBadge: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    backdropFilter: 'blur(10px)',
   },
-  cardTitle: {
-    color: '#1a1a1a',
-    fontSize: 18,
-    fontFamily: 'Roboto-Bold',
-    fontWeight: 'bold',
-    lineHeight: 24,
-    marginBottom: 6,
-    letterSpacing: -0.3,
-  },
-  cardDescription: {
-    color: '#666',
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
-    lineHeight: 20,
-    marginBottom: 16,
-    fontWeight: '400',
-  },
-  cardFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  originalPrice: {
-    color: '#999',
-    fontSize: 14,
-    fontFamily: 'Roboto-Regular',
-    textDecorationLine: 'line-through',
-    marginRight: 8,
-  },
-  salePrice: {
-    color: COLORS.primary,
-    fontSize: 18,
-    fontFamily: 'Roboto-Bold',
-    fontWeight: 'bold',
-  },
-  ctaButton: {
-    backgroundColor: COLORS.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  ctaText: {
+  durationText: {
     color: '#fff',
-    fontSize: 13,
+    fontSize: 12,
     fontFamily: 'Roboto-Medium',
     fontWeight: '600',
-    marginRight: 4,
+  },
+  bookButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 16,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bookButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'Roboto-Bold',
+    fontWeight: 'bold',
+    letterSpacing: 0.5,
   },
 });

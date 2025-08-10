@@ -1,7 +1,9 @@
 import Category from "@/components/home/category";
+import TravelGroupCard from "@/components/home/GroupNotes";
 import Locations from "@/components/home/locations";
 import PlacesToExplore from "@/components/home/PlacesToExplore";
 import Promotions from "@/components/home/promotions";
+import SplitwiseSummary from "@/components/home/SplitwiseSummary";
 import { COLORS } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
@@ -46,7 +48,7 @@ const Header = ({
       />
       <TextInput
         style={styles.searchInput}
-        placeholder="Search by City, Hotel, or Location"
+        placeholder="Explore local places"
         value={searchQuery}
         onChangeText={onSearchChange}
         placeholderTextColor="#999"
@@ -86,7 +88,7 @@ const HeroSection = () => (
 );
 
 // Section Title Component
-const SectionTitle = ({ title, subtitle }) => (
+const SectionTitle = ({ title }) => (
   <View style={styles.sectionTitleContainer}>
     <View style={styles.titleWrapper}>
       <Text style={styles.sectionTitle}>{title}</Text>
@@ -163,17 +165,24 @@ export default function Homepage() {
           <HeroSection />
 
           <View style={styles.section}>
-            <SectionTitle title="Promotions" subtitle="Limited time offers" />
+            <SectionTitle title="Promotions" />
             <Promotions />
           </View>
 
           <View style={styles.section}>
-            <SectionTitle
-              title="Discover Places"
-              subtitle="Amazing destinations waiting to be explored"
-            />
+            <SectionTitle title="Discover Places" />
             <PlacesToExplore />
           </View>
+
+          <View style={styles.section}>
+            <SectionTitle title="Your Travel Groups" />
+            <TravelGroupCard />
+          </View>
+
+          {/* <View style={styles.section}>
+           <Text></Text>
+            <SplitwiseSummary />
+          </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -241,7 +250,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: "#333",
-    paddingVertical: 8,
+    // paddingVertical: 8,
     paddingHorizontal: 0,
     minHeight: 40,
   },
@@ -348,31 +357,31 @@ const styles = StyleSheet.create({
   },
 
   // Section Styles
-    // Section wrapper
+  // Section wrapper
   section: {
     flexDirection: "column",
     marginBottom: 32,
   },
-   sectionTitleContainer: {
+  sectionTitleContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 12,
   },
   titleWrapper: {
     flex: 1,
   },
   sectionTitle: {
-    fontSize: 24,
-    fontFamily: 'Roboto-Bold',
+    fontSize: 20,
+    fontFamily: "Roboto-Medium",
     fontWeight: "700",
     color: "#1a1a1a",
     letterSpacing: -0.5,
-    marginBottom: 4,
+    // marginBottom: 4,
   },
   sectionSubtitle: {
     fontSize: 15,
-    fontFamily: 'Roboto-Regular',
+    fontFamily: "Roboto-Regular",
     color: "#666",
     fontWeight: "400",
     lineHeight: 20,
@@ -386,7 +395,7 @@ const styles = StyleSheet.create({
   seeAllText: {
     color: COLORS.primary,
     fontSize: 14,
-    fontFamily: 'Roboto-Medium',
+    fontFamily: "Roboto-Medium",
     fontWeight: "600",
     marginRight: 2,
   },

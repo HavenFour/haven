@@ -2,7 +2,8 @@
 import { Ionicons } from "@expo/vector-icons"
 import Checkbox from "expo-checkbox"
 import { useRouter } from "expo-router"
-import { useState } from "react"
+import { useCallback, useState } from "react"
+import * as AuthSession from "expo-auth-session";
 import {
   Alert,
   Image,
@@ -18,6 +19,7 @@ import {
 import Svg, { Path } from "react-native-svg"
 import { COLORS } from "../../constants/colors"
 import { useAuth } from "../../contexts/auth-context"
+import { useSSO } from "@clerk/clerk-expo"
 
 export const GoogleLogo = () => (
   <Svg width={20} height={20} viewBox="0 0 533.5 544.3">
@@ -54,6 +56,7 @@ const Header = ({ title, onBackPress }: { title: string; onBackPress: () => void
 export default function Signup() {
   const router = useRouter()
   const { signIn } = useAuth()
+  const { startSSOFlow } = useSSO();
   const [step, setStep] = useState(1)
   const [otp, setOtp] = useState("")
 
@@ -165,9 +168,30 @@ export default function Signup() {
     }
   }
 
-  const handleGoogleSignUp = () => {
-    Alert.alert("Google Sign-Up", "Google Sign-Up functionality will be implemented here.")
-  }
+
+
+  // Replace your existing handleGoogleSignUp with this:
+  const handleGoogleSignUp = useCallback(async () => {
+    try {
+      const { createdSessionId, setActive } = await startSSOFlow({
+        strategy: "oauth_google",
+        redirectUrl: AuthSession.makeRedirectUri(),
+      });
+
+      if (createdSessionId) {
+        setActive!({ session: createdSessionId });
+        // After successful sign-in, you can navigate to protected page or perform additional logic
+      } else {
+        Alert.alert("Google Sign-Up Failed", "No session was created.");
+      }
+    } catch (error) {
+      console.error("Google Sign-Up error:", error);
+      Alert.alert(
+        "Sign Up Failed",
+        "An error occurred during Google sign up. Please try again."
+      );
+    }
+  }, [startSSOFlow]);
 
   const renderStepContent = () => {
     switch (step) {

@@ -1,6 +1,6 @@
 "use client";
-import { useSSO } from '@clerk/clerk-expo';
-import * as AuthSession from 'expo-auth-session';
+import { useSSO } from "@clerk/clerk-expo";
+import * as AuthSession from "expo-auth-session";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 
@@ -20,18 +20,16 @@ import {
 import Svg, { Path } from "react-native-svg";
 import { COLORS } from "../../constants/colors";
 import { useAuth } from "../../contexts/auth-context";
+import LoadingModal from "@/components/LoadingModal";
 
 export const useWarmUpBrowser = () => {
   useEffect(() => {
-   
     void WebBrowser.warmUpAsync();
     return () => {
-    
       void WebBrowser.coolDownAsync();
     };
   }, []);
 };
-
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -63,29 +61,34 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingText, setLoadingText] = useState("");
 
-   const { startSSOFlow } = useSSO()
+
+  const { startSSOFlow } = useSSO();
 
   const onPress = useCallback(async () => {
     try {
-      
-      const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
-        strategy: 'oauth_google',
-       
-        redirectUrl: AuthSession.makeRedirectUri(),
-      })
+      setIsLoading(true);
+      setLoadingText("Signing in with Google...");
+      const { createdSessionId, setActive, signIn, signUp } =
+        await startSSOFlow({
+          strategy: "oauth_google",
 
-      
+          redirectUrl: AuthSession.makeRedirectUri(),
+        });
+
       if (createdSessionId) {
-        setActive!({ session: createdSessionId })
+        setActive!({ session: createdSessionId });
       } else {
-       
       }
+
+      Alert.alert("Success", "Logged in successfully!");
     } catch (err) {
-      
-      console.error(JSON.stringify(err, null, 2))
+      console.error(JSON.stringify(err, null, 2));
+    } finally {
+      setIsLoading(false);
     }
-  }, [])
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -95,6 +98,7 @@ export default function Login() {
 
     try {
       setIsLoading(true);
+      setLoadingText("Signing in...");
       const response = await fetch(
         "https://reasonable-amazement-production.up.railway.app/api/v1/auth/login",
         {
@@ -121,7 +125,7 @@ export default function Login() {
       }
       console.log(data.data);
       // Use the auth context to sign in
-      const { accessToken, refreshToken,user } = data.data;
+      const { accessToken, refreshToken, user } = data.data;
       await signIn(accessToken, refreshToken, user);
       Alert.alert("Success", "Logged in successfully!");
     } catch (error) {
@@ -205,9 +209,7 @@ export default function Login() {
           onPress={handleLogin}
           disabled={isLoading}
         >
-          <Text style={styles.buttonText}>
-            {isLoading ? "Signing in..." : "Sign in"}
-          </Text>
+          <Text style={styles.buttonText}>Sign in</Text>
         </TouchableOpacity>
 
         {/* Or Separator */}
@@ -236,6 +238,8 @@ export default function Login() {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <LoadingModal visible={isLoading} text={loadingText} />
+
     </KeyboardAvoidingView>
   );
 }

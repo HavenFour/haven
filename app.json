@@ -49,6 +49,10 @@
         "projectId": "d19d8fca-07b9-4741-a8b0-75adae62abb8"
       }
     },
+    "androidNavigationBar": {
+      "visible": "leanBack",
+      "backgroundColor": "#ffffff"
+    },
     "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/d19d8fca-07b9-4741-a8b0-75adae62abb8"
