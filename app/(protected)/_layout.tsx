@@ -15,6 +15,7 @@ import { useAuth } from '@/contexts/auth-context';
 export default function ProtectedLayout() {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
+  
 
   // Optional: gate the protected stack
   useEffect(() => {

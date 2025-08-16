@@ -60,7 +60,7 @@ export default function ProtectedLayout() {
           position: "absolute",
           left: 20,
           right: 20,
-          bottom: Platform.OS === "ios" ? 30 + insets.bottom : 44,
+          bottom: Platform.OS === "ios" ? 12 + insets.bottom : 12,
           backgroundColor: COLORS.primary,
           borderTopRightRadius: 40,
           borderTopLeftRadius: 40,

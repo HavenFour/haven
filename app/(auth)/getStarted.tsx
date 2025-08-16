@@ -178,10 +178,10 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 16,
-    color: '#666',
+    color: '#000',
     textAlign: 'center',
     lineHeight: 24,
-    fontFamily: "ubuntu-regular",
+    fontFamily: "ubuntu-medium",
   },
   paginationContainer: {
     flexDirection: 'row',
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   skipButtonText: {
     
     fontSize: 16,
-    color: '#666',
+    color: '#000',
     fontFamily: "ubuntu-regular",
   },
 });
