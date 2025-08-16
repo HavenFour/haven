@@ -1,10 +1,12 @@
 import Category from "@/components/home/category";
 import TravelGroupCard from "@/components/home/GroupNotes";
+import Header from "@/components/home/Header";
 import Locations from "@/components/home/locations";
 import PlacesToExplore from "@/components/home/PlacesToExplore";
 import Promotions from "@/components/home/promotions";
 import SplitwiseSummary from "@/components/home/SplitwiseSummary";
 import { COLORS } from "@/constants/colors";
+import { useAuth } from "@/contexts/auth-context";
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
@@ -20,47 +22,7 @@ import {
 } from "react-native";
 
 // Header Component with Hamburger Menu, Notifications, Search, and Filter
-const Header = ({
-  searchQuery,
-  onSearchChange,
-  onMenuPress,
-  onNotificationPress,
-}) => (
-  <View style={styles.header}>
-    <View style={styles.headerTop}>
-      <TouchableOpacity style={styles.menuButton} onPress={onMenuPress}>
-        <Ionicons name="menu" size={24} color="#fff" />
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.notificationButton}
-        onPress={onNotificationPress}
-      >
-        <Ionicons name="notifications-outline" size={24} color="#fff" />
-      </TouchableOpacity>
-    </View>
 
-    <View style={styles.searchContainer}>
-      <Ionicons
-        name="search"
-        size={20}
-        color="#999"
-        style={styles.searchIcon}
-      />
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Explore local places"
-        value={searchQuery}
-        onChangeText={onSearchChange}
-        placeholderTextColor="#999"
-        returnKeyType="search"
-        autoCapitalize="words"
-      />
-      <TouchableOpacity style={styles.filterButton}>
-        <Ionicons name="options-outline" size={18} color="#fff" />
-      </TouchableOpacity>
-    </View>
-  </View>
-);
 
 // Hero Section Component
 const HeroSection = () => (
@@ -75,7 +37,7 @@ const HeroSection = () => (
     </View>
     <View style={styles.imageContainer}>
       <Image
-        source={require("../../assets/images/Journey-amico.png")}
+        source={require("../../../assets/images/Journey-amico.png")}
         style={styles.journeyImage}
         resizeMode="contain"
       />
@@ -103,6 +65,7 @@ const SectionTitle = ({ title }) => (
 
 // Main Homepage Component
 export default function Homepage() {
+  const {user} = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(null);
 
@@ -138,11 +101,11 @@ export default function Homepage() {
   const categories = [
     { name: "All", icon: "earth" },
     { name: "Nature", icon: "tree" },
-    { name: "Beach", icon: "beach" },
-    { name: "Mountain", icon: "mountain" },
-    { name: "City", icon: "city" },
-    { name: "Desert", icon: "desert" },
-    { name: "Forest", icon: "pine-tree" },
+    { name: "Beaches", icon: "beach" },
+    { name: "Mountains", icon: "mountain" },
+    { name: "Cities", icon: "city" },
+    { name: "Deserts", icon: "desert" },
+    { name: "Forests", icon: "pine-tree" },
   ];
 
   return (
@@ -154,6 +117,9 @@ export default function Homepage() {
         onSearchChange={setSearchQuery}
         onMenuPress={handleMenuPress}
         onNotificationPress={handleNotificationPress}
+        user={user}
+        hasUnread
+
       />
 
       <ScrollView
@@ -171,11 +137,13 @@ export default function Homepage() {
 
           <View style={styles.section}>
             <SectionTitle title="Discover Places" />
-            <PlacesToExplore />
+            <Category categories={categories} selectedCategory={selectedCategory} onSelectCategory={setSelectedCategory} />
+            <PlacesToExplore selectedCategory={selectedCategory}/>
           </View>
 
           <View style={styles.section}>
             <SectionTitle title="Your Travel Groups" />
+
             <TravelGroupCard />
           </View>
 

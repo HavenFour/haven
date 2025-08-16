@@ -37,9 +37,10 @@ const TravelGroupCard = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.background,
-    padding: 16,
+    // backgroundColor: COLORS.background,
+    // padding: 16,
     flex: 1,
+   
   },
   header: {
     fontSize: 18,
@@ -50,6 +51,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: COLORS.surface,
     borderRadius: 12,
+     borderWidth: 1,
+    borderColor: "#eee",
     padding: 14,
     shadowColor: "#000",
     shadowOpacity: 0.05,

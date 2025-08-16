@@ -84,10 +84,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!isLoading) {
       if (isAuthenticated && inAuthGroup) {
         // User is authenticated but on auth pages, redirect to home
-        router.replace("/(protected)/home");
+        router.replace("/(protected)/(tabs)/home");
       } else if (!isAuthenticated && !inAuthGroup) {
         // User is not authenticated and not on auth pages, redirect to login
-        router.replace("/(auth)/login");
+        router.replace("/(auth)/getStarted");
       }
     }
   }, [isAuthenticated, inAuthGroup, isLoading]);

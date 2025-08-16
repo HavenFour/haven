@@ -2,121 +2,136 @@ import { COLORS } from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Dimensions,
-    FlatList,
-    Image,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 const { width } = Dimensions.get('window');
 const CARD_WIDTH = width * 0.85;
+const CARD_HEIGHT = 320;
 
-// Updated promotion data with better structure
+// Data now includes pricing fields explicitly
 const promotionData = [
   {
     id: '1',
     title: 'Santorini Sunset Loft',
-    discount: '50% OFF',
-    originalPrice: '$299',
-    salePrice: '$890',
-    description: 'Experience a cliffside loft with iconic white walls, blue domes, and magical sunset views.',
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=350&fit=crop',
-    location: 'Santorini, Greece',
+    description:
+      'Experience a cliffside loft with iconic white walls, blue domes, and magical sunset views.',
+    image:
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=600&fit=crop',
     rating: 4.8,
     reviews: 2341,
-    tag: 'Romantic Stay',
-    duration: '2 Night Trip',
+    salePrice: '$890',
+    originalPrice: '$1,299',
     isLiked: false,
   },
   {
     id: '2',
     title: 'Mountain Adventure Lodge',
-    discount: '30% OFF',
-    originalPrice: '$450',
-    salePrice: '$650',
-    description: 'Explore breathtaking peaks and scenic valleys with luxury mountain accommodation.',
-    image: 'https://images.unsplash.com/photo-1464822759844-d150baec028b?w=400&h=350&fit=crop',
-    location: 'Swiss Alps',
+    description:
+      'Explore breathtaking peaks and scenic valleys with luxury mountain accommodation.',
+    image:
+      'https://images.unsplash.com/photo-1464822759844-d150baec028b?w=800&h=600&fit=crop',
     rating: 4.9,
     reviews: 1876,
-    tag: 'Adventure',
-    duration: '3 Night Trip',
+    salePrice: '$650',
+    originalPrice: '$920',
     isLiked: true,
   },
   {
     id: '3',
     title: 'Parisian City Escape',
-    discount: '25% OFF',
-    originalPrice: '$380',
-    salePrice: '$480',
-    description: 'Urban exploration with cultural experiences in the heart of the City of Light.',
-    image: 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=400&h=350&fit=crop',
-    location: 'Paris, France',
+    description:
+      'Urban exploration with cultural experiences in the heart of the City of Light.',
+    image:
+      'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&h=600&fit=crop',
     rating: 4.7,
     reviews: 3021,
-    tag: 'Cultural',
-    duration: '4 Night Trip',
+    salePrice: '$480',
+    originalPrice: '$610',
     isLiked: false,
   },
 ];
 
-const PromotionCard = ({ item, onPress }) => (
-  <TouchableOpacity style={styles.card} onPress={() => onPress(item)}>
+type PromotionItem = (typeof promotionData)[number];
+
+const PromotionCard = ({
+  item,
+  onPress,
+}: {
+  item: PromotionItem;
+  onPress: (i: PromotionItem) => void;
+}) => (
+  <TouchableOpacity
+    style={styles.card}
+    activeOpacity={0.9}
+    onPress={() => onPress(item)}
+  >
     <View style={styles.imageContainer}>
       <Image source={{ uri: item.image }} style={styles.cardImage} />
-      <View style={styles.gradientOverlay} />
-      
+
       {/* Like Button */}
-      <TouchableOpacity style={styles.likeButton}>
-        <Ionicons 
-          name={item.isLiked ? "heart" : "heart-outline"} 
-          size={20} 
-          color={item.isLiked ? "#FF4757" : "#fff"} 
+      <TouchableOpacity style={styles.likeButton} activeOpacity={0.8}>
+        <Ionicons
+          name={item.isLiked ? 'heart' : 'heart-outline'}
+          size={20}
+          color={item.isLiked ? '#FF4757' : '#fff'}
         />
       </TouchableOpacity>
-      
-      {/* Content Overlay */}
-      <View style={styles.overlayContent}>
-        <View style={styles.titleSection}>
-          <Text style={styles.cardTitle}>{item.title}</Text>
-          <Text style={styles.priceText}>{item.salePrice}</Text>
+
+      {/* Floating White Info Box with: title, desc, rating, price, explore */}
+      <View style={styles.infoBox}>
+        {/* Title */}
+        <Text numberOfLines={1} style={styles.infoTitle}>
+          {item.title}
+        </Text>
+
+        {/* Description */}
+        <Text numberOfLines={2} style={styles.infoSubtitle}>
+          {item.description}
+        </Text>
+
+        {/* Rating */}
+         <View style={styles.metaRow}>
+                    <View style={styles.ratingChip}>
+                      <Ionicons name="star" size={12} color="#FFB800" />
+                      <Text style={styles.ratingText}>
+                        {item.rating.toFixed(1)}
+                      </Text>
+                      <Text style={styles.reviewsText}>({item.reviews})</Text>
+                    </View>
+                  </View>
+
+        {/* Price + CTA */}
+        <View style={styles.priceCtaRow}>
+          <View style={styles.priceGroup}>
+            {item.originalPrice ? (
+              <Text style={styles.originalPrice}>{item.originalPrice}</Text>
+            ) : null}
+            <Text style={styles.salePrice}>{item.salePrice}</Text>
+          </View>
+
+          <TouchableOpacity style={styles.ctaButton} activeOpacity={0.9}>
+            <Text style={styles.ctaText}>Explore</Text>
+            <Ionicons name="chevron-forward" size={16} color="#fff" />
+          </TouchableOpacity>
         </View>
-        
-        <Text style={styles.cardDescription}>{item.description}</Text>
-        
-        {/* Tags Row */}
-        <View style={styles.tagsRow}>
-          <View style={styles.ratingContainer}>
-            <Ionicons name="star" size={14} color="#FFB800" />
-            <Text style={styles.ratingText}>{item.rating}</Text>
-          </View>
-          <View style={styles.tagBadge}>
-            <Text style={styles.tagText}>{item.tag}</Text>
-          </View>
-          <View style={styles.durationBadge}>
-            <Text style={styles.durationText}>{item.duration}</Text>
-          </View>
-        </View>
-        
-        {/* Book Now Button */}
-        <TouchableOpacity style={styles.bookButton}>
-          <Text style={styles.bookButtonText}>Book now</Text>
-        </TouchableOpacity>
       </View>
     </View>
   </TouchableOpacity>
 );
 
 export default function Promotions() {
-  const handlePromotionPress = (promotion) => {
+  const handlePromotionPress = (promotion: PromotionItem) => {
     console.log('Pressed promotion:', promotion.title);
-    // Handle navigation or action here
   };
 
-  const renderPromotion = ({ item }) => (
+  const renderPromotion = ({ item }: { item: PromotionItem }) => (
     <PromotionCard item={item} onPress={handlePromotionPress} />
   );
 
@@ -133,148 +148,147 @@ export default function Promotions() {
         decelerationRate="fast"
         snapToAlignment="start"
         ItemSeparatorComponent={() => <View style={{ width: 20 }} />}
-       
       />
     </View>
   );
 }
 
+const chipBg = "#F3F6FA";
+const chipBorder = "#E6ECF2";
+
 const styles = StyleSheet.create({
-  container: {
-    // marginVertical: 16,
-  },
+  container: {},
   listContainer: {
     paddingHorizontal: 0,
   },
   card: {
     width: CARD_WIDTH,
-    height: 460,
-    borderRadius: 24,
+    height: CARD_HEIGHT,
+    borderRadius: 20,
     overflow: 'hidden',
     backgroundColor: '#fff',
   },
   imageContainer: {
     flex: 1,
     position: 'relative',
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   cardImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'cover',
   },
-  gradientOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  },
+
   likeButton: {
     position: 'absolute',
-    top: 20,
-    right: 20,
+    top: 12,
+    right: 12,
     width: 36,
     height: 36,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(0,0,0,0.3)',
     borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    backdropFilter: 'blur(10px)',
   },
-  overlayContent: {
+
+  // Floating white panel
+  infoBox: {
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 24,
+    left: 14,
+    right: 14,
+    bottom: 14,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.15,
+    shadowRadius: 16,
+    elevation: 8,
   },
-  titleSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+  infoTitle: {
+    fontSize: 16,
+    color: '#111827',
+    fontFamily: 'Roboto-Bold',
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  infoSubtitle: {
+    fontSize: 13,
+    color: '#6b7280',
+    lineHeight: 18,
+    marginBottom: 10,
+  },
+
+  // Rating row
+ metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 8,
   },
-  cardTitle: {
-    color: '#fff',
-    fontSize: 24,
-    fontFamily: 'Roboto-Bold',
-    fontWeight: 'bold',
-    lineHeight: 28,
-    flex: 1,
-    marginRight: 16,
-    letterSpacing: -0.5,
-  },
-  priceText: {
-    color: '#fff',
-    fontSize: 20,
-    fontFamily: 'Roboto-Bold',
-    fontWeight: 'bold',
-  },
-  cardDescription: {
-    color: 'rgba(255, 255, 255, 0.9)',
-    fontSize: 15,
-    fontFamily: 'Roboto-Regular',
-    lineHeight: 22,
-    marginBottom: 20,
-    fontWeight: '400',
-  },
-  tagsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 24,
-    gap: 12,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    backdropFilter: 'blur(10px)',
+  ratingChip: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: chipBg,
+    borderColor: chipBorder,
+    borderWidth: 1,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 40,
   },
   ratingText: {
-    color: '#fff',
-    fontSize: 14,
-    fontFamily: 'Roboto-Medium',
-    fontWeight: '600',
     marginLeft: 4,
-  },
-  tagBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backdropFilter: 'blur(10px)',
-  },
-  tagText: {
-    color: '#fff',
+    color: "#1f2937",
     fontSize: 12,
-    fontFamily: 'Roboto-Medium',
-    fontWeight: '600',
+    fontFamily: "Roboto-Bold",
+    fontWeight: "700",
   },
-  durationBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-    backdropFilter: 'blur(10px)',
+  reviewsText: {
+    marginLeft: 4,
+    color: "#6b7280",
+    fontSize: 11,
+    fontFamily: "Roboto-Regular",
   },
-  durationText: {
-    color: '#fff',
-    fontSize: 12,
-    fontFamily: 'Roboto-Medium',
-    fontWeight: '600',
-  },
-  bookButton: {
-    backgroundColor: COLORS.primary,
-    paddingVertical: 16,
-    borderRadius: 28,
+
+  // Price + CTA
+  priceCtaRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
-  bookButtonText: {
-    color: '#fff',
+  priceGroup: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  originalPrice: {
+    color: '#9CA3AF',
+    fontSize: 12,
+    textDecorationLine: 'line-through',
+    marginRight: 8,
+  },
+  salePrice: {
+    color: '#111827',
     fontSize: 16,
     fontFamily: 'Roboto-Bold',
-    fontWeight: 'bold',
-    letterSpacing: 0.5,
+    fontWeight: '700',
+  },
+
+  ctaButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.primary,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 40,
+  },
+  ctaText: {
+    color: '#fff',
+    fontSize: 13,
+    fontFamily: 'Roboto-Bold',
+    fontWeight: '700',
+    marginRight: 4,
   },
 });

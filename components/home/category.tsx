@@ -5,7 +5,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 
 export default function Category({ categories, selectedCategory, onSelectCategory }) {
   return (
-    <View style={{ marginTop: 10 }}>
+    <View style={{ marginBottom: 16 }}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -23,12 +23,12 @@ export default function Category({ categories, selectedCategory, onSelectCategor
               onPress={() => onSelectCategory(category.name)}
               activeOpacity={0.7}
             >
-              <MaterialCommunityIcons
+              {/* <MaterialCommunityIcons
                 name={category.icon}
                 size={20}
                 color={isActive ? '#fff' : '#2196f3'}
                 style={{ marginRight: 6 }}
-              />
+              /> */}
               <Text
                 style={[
                   styles.categoryText,
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   categoryItem: {
-    backgroundColor: '#e0f2fe',
+    backgroundColor: '#efefef',
     borderRadius: 30,
     paddingVertical: 7,
     paddingHorizontal: 18,

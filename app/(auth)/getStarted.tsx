@@ -60,7 +60,7 @@ export default function GetStarted() {
   // If user is authenticated, redirect to home
   useEffect(() => {
     if (isAuthenticated) {
-      router.push("/(protected)/home");
+      router.push("/(protected)/(tabs)/home");
     }
   }, [isAuthenticated, router]);
 
@@ -133,7 +133,7 @@ export default function GetStarted() {
           style={styles.skipButton}
           onPress={() => router.push("/(auth)/signup")}
         >
-          <Text style={styles.skipButtonText}>Create Account Instead</Text>
+          <Text style={styles.skipButtonText}>Create Account </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -229,8 +229,12 @@ const styles = StyleSheet.create({
   skipButton: {
     alignItems: 'center',
     paddingVertical: 12,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
+    borderRadius: 40,
   },
   skipButtonText: {
+    
     fontSize: 16,
     color: '#666',
     fontFamily: "ubuntu-regular",
